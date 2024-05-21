@@ -1,7 +1,6 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-
 import { Check, ChevronsUpDown } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 
@@ -21,17 +20,18 @@ import {
   CommandItem,
   CommandList,
 } from "@/components/ui/command";
-import { CreateCategoryDialog } from "./CreateCategoryDialog";
+import { CreateCategoryDialog } from "@/app/(dashboard)/_components/CreateCategoryDialog";
 import { cn } from "@/lib/utils";
 
 interface Props {
   type: TransactionType;
   onChange: (value: string) => void;
+  categoryName?: string;
 }
 
-export const CategoryPicker = ({ type, onChange }: Props) => {
+export const CategoryPicker = ({ categoryName, type, onChange }: Props) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [value, setValue] = useState("");
+  const [value, setValue] = useState(categoryName || "");
 
   useEffect(() => {
     if (!value) return;
@@ -76,7 +76,11 @@ export const CategoryPicker = ({ type, onChange }: Props) => {
       <PopoverContent className="w-[200px] p-0">
         <Command onSubmit={(e) => e.preventDefault()}>
           <CommandInput placeholder="Search category..." />
-          <CreateCategoryDialog type={type} successCallback={successCallback} />
+          <CreateCategoryDialog
+            action="create"
+            type={type}
+            successCallback={successCallback}
+          />
           <CommandList>
             <CommandEmpty>
               <p>No category found.</p>

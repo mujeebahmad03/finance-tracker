@@ -42,14 +42,28 @@ export async function DeleteCategory(form: DeleteCategorySchemaType) {
 
   const { name, type } = parsedBody.data;
 
-  return await prisma.category.delete({
-    where: {
-      name_userId_type: {
+  return await prisma.$transaction(async (prisma) => {
+    await prisma.transaction.updateMany({
+      where: {
         userId: user.id,
-        name,
-        type,
+        category: name,
+        type: type,
       },
-    },
+      data: {
+        category: "Uncategorized",
+        categoryIcon: "📝",
+      },
+    });
+
+    return await prisma.category.delete({
+      where: {
+        name_userId_type: {
+          userId: user.id,
+          name,
+          type,
+        }
+      },
+    });
   });
 }
 

@@ -13,6 +13,7 @@ import {
   getPaginationRowModel,
 } from "@tanstack/react-table";
 import { download, generateCsv, mkConfig } from "export-to-csv";
+import { Download, Edit2, MoreHorizontal, Trash2Icon } from "lucide-react";
 
 import {
   Table,
@@ -31,16 +32,18 @@ import { cn } from "@/lib/utils";
 import { DataTableFacetedFilter } from "@/components/data-table/FacetedFilters";
 import { DataTableViewOptions } from "@/components/data-table/ColumnToggle";
 import { Button } from "@/components/ui/button";
-import { Download, MoreHorizontal, Trash2Icon } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
+  DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { DeleteTransactionDialog } from "./DeleteTransactionDialog";
+import type { TransactionType } from "@/lib/types";
+import { EditTransactions } from "./EditTransactions";
 
 interface Props {
   from: Date;
@@ -252,7 +255,7 @@ export const TransactionTable = ({ from, to }: Props) => {
           <DataTableViewOptions table={table} />
         </div>
       </div>
-      
+
       <SkeletonWrapper isLoading={transactionsHistoryQuery.isFetching}>
         <div className="rounded-md border">
           <Table>
@@ -333,6 +336,7 @@ const RowActions = ({
   transaction: TransactionHistoryRow;
 }) => {
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+  const [showEditDialog, setShowEditDialog] = useState(false);
 
   return (
     <>
@@ -341,6 +345,14 @@ const RowActions = ({
         setOpen={setShowDeleteDialog}
         transactionId={transaction.id}
       />
+
+      <EditTransactions
+        isOpen={showEditDialog}
+        setIsOpen={setShowEditDialog}
+        transaction={transaction}
+        type={transaction.type as TransactionType}
+      />
+
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant={"ghost"} className="h-8 w-8 p-0">
@@ -351,13 +363,23 @@ const RowActions = ({
         <DropdownMenuContent align="end">
           <DropdownMenuLabel>Actions</DropdownMenuLabel>
           <DropdownMenuSeparator />
-          <DropdownMenuItem
-            className="flex items-center gap-2"
-            onSelect={() => setShowDeleteDialog((prev) => !prev)}
-          >
-            <Trash2Icon className="h-4 w-4 text-muted-foreground" />
-            Delete
-          </DropdownMenuItem>
+          <DropdownMenuGroup>
+            <DropdownMenuItem
+              className="flex items-center gap-2"
+              onSelect={() => setShowEditDialog((prev) => !prev)}
+            >
+              <Edit2 className="h-4 w-4 text-muted-foreground" />
+              Edit
+            </DropdownMenuItem>
+
+            <DropdownMenuItem
+              className="flex items-center gap-2"
+              onSelect={() => setShowDeleteDialog((prev) => !prev)}
+            >
+              <Trash2Icon className="h-4 w-4 text-muted-foreground" />
+              Delete
+            </DropdownMenuItem>
+          </DropdownMenuGroup>
         </DropdownMenuContent>
       </DropdownMenu>
     </>

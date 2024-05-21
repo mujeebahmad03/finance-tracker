@@ -21,7 +21,7 @@ model UserSettings {
 model Category {
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now())
-  name      String
+  name      String   @unique
   userId    String
   icon      String
   type      String   @default("income")
@@ -40,8 +40,8 @@ model Transaction {
   userId      String
   type        String   @default("income")
 
-  category     String
-  categoryIcon String
+  category     String @default("Uncategorized")
+  categoryIcon String @default("📝")
 }
 
 model MonthHistory {
