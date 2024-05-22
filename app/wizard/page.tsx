@@ -53,7 +53,7 @@ const Page = async () => {
       </Button>
 
       <div className="mt-8">
-        <Logo />
+        <Logo loading={false} mobile={false} />
       </div>
     </div>
   );
