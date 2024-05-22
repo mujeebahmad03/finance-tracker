@@ -10,8 +10,8 @@ import "./globals.css";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Budget Tracker App",
-  description: "Track your budget",
+  title: "Finance Tracker App",
+  description: "Track your incomes and expenses",
 };
 
 export default function RootLayout({
